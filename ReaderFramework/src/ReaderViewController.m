@@ -30,6 +30,7 @@
 #import "ReaderContentView.h"
 #import "ReaderThumbCache.h"
 #import "ReaderThumbQueue.h"
+#import <OMCore/OMCore.h>
 
 #import "UINavigationController+NavBarAnimation.h"
 
@@ -882,32 +883,36 @@ ReaderMainPagebarDelegate, ReaderContentViewDelegate, ThumbsViewControllerDelega
 }
 
 -(void)actionSheetEmailDocument {
-    if ([MFMailComposeViewController canSendMail] == NO) return;
-    
-    unsigned long long fileSize = [_document.fileSize unsignedLongLongValue];
-    
-    if (fileSize < (unsigned long long)15728640) // Check attachment size limit (15MB)
-        {
-        NSURL *fileURL = _document.fileURL; NSString *fileName = _document.fileName; // Document
+    if ([MFMailComposeViewController canSendMail] == NO) {
+        [OMAlertView showAlertWithTitle:@"Atención" message:@"No hay ninguna cuenta de correo configurada en el dispositivo" delegate:nil cancelButtonTitle:@"Continuar" otherButtonsTitles:nil];
+    } else {
+        unsigned long long fileSize = [_document.fileSize unsignedLongLongValue];
         
-        NSData *attachment = [NSData dataWithContentsOfURL:fileURL options:(NSDataReadingMapped|NSDataReadingUncached) error:nil];
-        
-        if (attachment != nil) // Ensure that we have valid document file attachment data
+        if (fileSize < (unsigned long long)15728640) // Check attachment size limit (15MB)
             {
-            _mailComposer = [MFMailComposeViewController new];
+            NSURL *fileURL = _document.fileURL; NSString *fileName = _document.fileName; // Document
             
-            [_mailComposer addAttachmentData:attachment mimeType:@"application/pdf" fileName:fileName];
+            NSData *attachment = [NSData dataWithContentsOfURL:fileURL options:(NSDataReadingMapped|NSDataReadingUncached) error:nil];
             
-            [_mailComposer setSubject:@"PDF con su información generada"]; // Use the document file name for the subject
-            
-            _mailComposer.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-            _mailComposer.modalPresentationStyle = UIModalPresentationFormSheet;
-            
-            _mailComposer.mailComposeDelegate = self; // Set the delegate
-            
-            [self presentViewController:_mailComposer animated:YES completion:NULL];
+            if (attachment != nil) // Ensure that we have valid document file attachment data
+                {
+                _mailComposer = [MFMailComposeViewController new];
+                
+                [_mailComposer addAttachmentData:attachment mimeType:@"application/pdf" fileName:fileName];
+                
+                [_mailComposer setSubject:@"PDF con su información generada"]; // Use the document file name for the subject
+                
+                _mailComposer.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+                _mailComposer.modalPresentationStyle = UIModalPresentationFormSheet;
+                
+                _mailComposer.mailComposeDelegate = self; // Set the delegate
+                
+                [self presentViewController:_mailComposer animated:YES completion:NULL];
+                }
+            } else {
+                [OMAlertView showAlertWithTitle:@"Atención" message:@"No se pueden adjuntar archivos de más de 15MB" delegate:nil cancelButtonTitle:@"Continuar" otherButtonsTitles:nil];
             }
-        }
+    }
 }
 
 -(void)actionSheetOpenDocument {
