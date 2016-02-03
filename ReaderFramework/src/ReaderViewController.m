@@ -898,7 +898,7 @@ ReaderMainPagebarDelegate, ReaderContentViewDelegate, ThumbsViewControllerDelega
             
             [_mailComposer addAttachmentData:attachment mimeType:@"application/pdf" fileName:fileName];
             
-            [_mailComposer setSubject:fileName]; // Use the document file name for the subject
+            [_mailComposer setSubject:@"PDF con su información generada"]; // Use the document file name for the subject
             
             _mailComposer.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
             _mailComposer.modalPresentationStyle = UIModalPresentationFormSheet;
