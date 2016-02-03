@@ -884,7 +884,7 @@ ReaderMainPagebarDelegate, ReaderContentViewDelegate, ThumbsViewControllerDelega
 
 -(void)actionSheetEmailDocument {
     if ([MFMailComposeViewController canSendMail] == NO) {
-        [OMAlertView showAlertWithTitle:@"Atención" message:@"No hay ninguna cuenta de correo configurada en el dispositivo" delegate:nil cancelButtonTitle:@"Continuar" otherButtonsTitles:nil];
+        [OMAlertView showAlertWithTitle:@"Atención" message:@"No hay ninguna cuenta de correo configurada en el dispositivo" delegate:nil cancelButtonTitle:@"OK" otherButtonsTitles:nil];
     } else {
         unsigned long long fileSize = [_document.fileSize unsignedLongLongValue];
         
@@ -910,7 +910,7 @@ ReaderMainPagebarDelegate, ReaderContentViewDelegate, ThumbsViewControllerDelega
                 [self presentViewController:_mailComposer animated:YES completion:NULL];
                 }
             } else {
-                [OMAlertView showAlertWithTitle:@"Atención" message:@"No se pueden adjuntar archivos de más de 15MB" delegate:nil cancelButtonTitle:@"Continuar" otherButtonsTitles:nil];
+                [OMAlertView showAlertWithTitle:@"Atención" message:@"No se pueden adjuntar archivos de más de 15MB" delegate:nil cancelButtonTitle:@"OK" otherButtonsTitles:nil];
             }
     }
 }
